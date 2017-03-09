@@ -1,0 +1,206 @@
+
+util.h,2249
+#define UTIL_H_INCLUDEDUTIL_H_INCLUDED2,24
+  #define D(D16,293
+#define XSTR(XSTR22,368
+#define STR(STR23,392
+#define BASE BASE26,445
+#define KEYS_STR_SZ KEYS_STR_SZ29,538
+typedef char hexkey_t[KEYS_STR_SZ + 1];hexkey_t32,636
+typedef char hashkey_t[BASE];hashkey_t33,676
+typedef hashkey_t nodeid_t;nodeid_t34,706
+typedef char ipv4_t[16];ipv4_t36,735
+typedef ipv4_t ip_t;ip_t37,760
+typedef uint16_t port_t;port_t38,781
+  ip_t ip;ip41,823
+  port_t port;port42,834
+} addr_t;addr_t43,849
+enum rt_tblent_status { EMPTY = 0, VALID };rt_tblent_status45,860
+enum rt_tblent_status { EMPTY = 0, VALID };EMPTY45,860
+enum rt_tblent_status { EMPTY = 0, VALID };VALID45,860
+  rt_tblent_status status;status48,921
+  nodeid_t id;id49,948
+  addr_t addr;addr50,963
+} rt_tblent_t;  /* Routing Table Entry */rt_tblent_t51,978
+#define RT_TBL_NCOLS RT_TBL_NCOLS53,1021
+#define RT_TBL_NROWS RT_TBL_NROWS54,1047
+typedef rt_tblent_t rt_tbl_t[RT_TBL_NROWS][RT_TBL_NCOLS];rt_tbl_t57,1101
+#define LEAF_SET_HALFSZ LEAF_SET_HALFSZ59,1160
+#define LEAF_SET_SZ LEAF_SET_SZ60,1191
+  int cw_set_sz, ccw_set_sz;    /* No. of elements in CW and CCW sets */cw_set_sz65,1266
+  int cw_set_sz, ccw_set_sz;    /* No. of elements in CW and CCW sets */ccw_set_sz65,1266
+  rt_tblent_t cw_set[LEAF_SET_HALFSZ];  /* CW set of nodes*/cw_set66,1339
+  rt_tblent_t ccw_set[LEAF_SET_HALFSZ]; /* CCW set of nodes */ccw_set67,1400
+  rt_tblent_t owner;  /* Owner of this leaf set */owner68,1463
+  hashkey_t cw_max;cw_max73,1709
+  hashkey_t ccw_max;ccw_max76,1765
+} leafset_t;leafset_t77,1786
+  nodeid_t id;        /* Node ID as raw string */id82,1834
+  hexkey_t hexid;     /* Node ID as printable hex string */hexid83,1884
+  addr_t addr;        /* Addess (IP, Port) of node */addr84,1944
+  rt_tbl_t rt_tbl;    /* Node's Routing Table */rt_tbl85,1998
+  leafset_t leafset;  /* Node's Leaf Set */leafset86,2047
+} node_t;node_t87,2091
+#define HASH_COPY(HASH_COPY109,2658
+#define GE_HALFCIRC(GE_HALFCIRC111,2717
+#define LT_HALFCIRC(LT_HALFCIRC112,2777
+#define HASH_LT(HASH_LT114,2837
+#define HASH_LE(HASH_LE115,2887
+#define HASH_GT(HASH_GT116,2937
+#define HASH_GE(HASH_GE117,2987
+#define HASH_EQ(HASH_EQ118,3037
+
+pastry.cpp,250
+port_t pastry_port = DEFAULT_PORT;pastry_port7,92
+pastry_status_t pastry_status = INITIAL;pastry_status8,127
+node_t pastry_node;pastry_node9,168
+Sema pastry_sema;pastry_sema10,188
+int svr_cli_conn[2]; svr_cli_conn11,206
+main ()main14,234
+
+routing.h,215
+#define ROUTING_H_INCLUDEDROUTING_H_INCLUDED2,27
+enum rtng_status { SELF_HIT, FORWARD };rtng_status6,74
+enum rtng_status { SELF_HIT, FORWARD };SELF_HIT6,74
+enum rtng_status { SELF_HIT, FORWARD };FORWARD6,74
+
+server.cpp,519
+Server::handle_error (int errsv) handle_error12,182
+Server::init ()init27,626
+Server::write_to_socket (int fd, const char * buff, int len)write_to_socket91,2536
+Server::read_from_socket (int fd, char * buff)read_from_socket103,2765
+Server::handle_sock_req (int clientfd) handle_sock_req115,2970
+Server::put_sock_req (string s, string val, rt_tblent_t &res)put_sock_req286,7602
+Server::get_sock_req (string s, string &val)get_sock_req374,10203
+Server::add_sock_req ( hashkey_t key, add_sock_req459,12690
+
+leafset.cpp,138
+ins_in_leafset_arr (  rt_tblent_t *arr, ins_in_leafset_arr21,1029
+add_to_leafset (leafset_t *lf, rt_tblent_t *n)add_to_leafset51,1698
+
+routing.cpp,45
+get_rt_hop ( hashkey_t key, get_rt_hop5,44
+
+semaphore.cpp,81
+Sema::Sema (int ct)Sema5,46
+Sema::post ()post11,93
+Sema::wait ()wait19,174
+
+pastry.h,471
+#define PASTRY_H_INCLUDEDPASTRY_H_INCLUDED2,26
+enum pastry_status_t { INITIAL, SERVER_STARTED, JOINED };pastry_status_t7,96
+enum pastry_status_t { INITIAL, SERVER_STARTED, JOINED };INITIAL7,96
+enum pastry_status_t { INITIAL, SERVER_STARTED, JOINED };SERVER_STARTED7,96
+enum pastry_status_t { INITIAL, SERVER_STARTED, JOINED };JOINED7,96
+#define DEFAULT_IP DEFAULT_IP17,485
+#define DEFAULT_PORT DEFAULT_PORT21,579
+#define PASTRY_PROMPT PASTRY_PROMPT23,606
+
+server.h,513
+#define SERVER_H_INCLUDEDSERVER_H_INCLUDED2,26
+#define MAXBUFF MAXBUFF7,92
+#define MAXLINE MAXLINE8,123
+#define LISTEN_QUEUE LISTEN_QUEUE9,154
+#define SVRERR_CONN SVRERR_CONN11,186
+#define SVRERR_SELECT SVRERR_SELECT12,217
+#define SVRERR_SUCCESS SVRERR_SUCCESS13,248
+#define SVRERR_FAILURE SVRERR_FAILURE14,279
+#define SVRERR_WTOSOCK SVRERR_WTOSOCK15,310
+#define SVRERR_RFROMSOCK SVRERR_RFROMSOCK16,341
+typedef std::map<std::string, std::string> map_t;map_t20,457
+class ServerServer23,535
+
+util.cpp,2301
+hash2hex (char *s)hash2hex12,387
+md5_hash (const char *s)md5_hash29,831
+md5_hex (const char *s)md5_hex45,1276
+hexdig2dec (char c)hexdig2dec57,1549
+mk_node (ip_t ip, port_t port, node_t *node)mk_node73,1949
+pr_node (node_t *node)pr_node100,2663
+hash_diff (hashkey_t A, hashkey_t B)hash_diff111,3017
+hash_diff2 (hashkey_t A, hashkey_t B, hashkey_t res)hash_diff2140,3608
+hash_cmp (hashkey_t A, hashkey_t B)hash_cmp168,4189
+hash_moddiff (hashkey_t A, hashkey_t B)hash_moddiff183,4541
+hash_moddiff2 (hashkey_t A, hashkey_t B, hashkey_t res)hash_moddiff2199,4842
+hash_ccwdist2 (hashkey_t A, hashkey_t B, hashkey_t res)hash_ccwdist2211,5103
+hash_cwdist2 (hashkey_t A, hashkey_t B, hashkey_t res)hash_cwdist2220,5288
+in_ccw_halfcirc (hashkey_t base, hashkey_t x)in_ccw_halfcirc229,5453
+in_cw_halfcirc (hashkey_t base, hashkey_t x)in_cw_halfcirc240,5646
+in_ccw_arc (hashkey_t base, hashkey_t extent, hashkey_t x)in_ccw_arc250,5849
+in_cw_arc (hashkey_t base, hashkey_t extent, hashkey_t x)in_cw_arc262,6109
+max_pref_match (char *s1, char *s2)max_pref_match274,6428
+max_pref_match_hash (hashkey_t k1, hashkey_t k2)max_pref_match_hash287,6733
+cp_rt_tbl_row (rt_tblent_t *dest, rt_tblent_t *src)cp_rt_tbl_row300,7099
+cp_rt_tbl_row_noclobvalid (rt_tblent_t *dest, rt_tblent_t *src)cp_rt_tbl_row_noclobvalid312,7331
+cp_rt_tbl (rt_tblent_t (*dest)[BASE], rt_tblent_t (*src)[BASE])cp_rt_tbl324,7564
+cp_rt_tbl_noclobvalid (rt_tblent_t (*dest)[BASE], rt_tblent_t (*src)[BASE])cp_rt_tbl_noclobvalid337,7854
+shift_leafset (rt_tblent_t *base, int sz)shift_leafset349,8101
+int serialize_tbl_entry (char * s, rt_tblent_t * t)serialize_tbl_entry358,8319
+int deserialize_tbl_entry (char * s, rt_tblent_t * t)deserialize_tbl_entry379,8807
+deserialize (char * s, node_t * n)deserialize398,9263
+serialize (char *s, node_t *n)serialize448,10354
+pr_leafset_entry (rt_tblent_t *ent)pr_leafset_entry495,11332
+eq_rt_tbl_ent (rt_tblent_t *A, rt_tblent_t *B)eq_rt_tbl_ent505,11550
+eq_nodes (node_t *A, node_t *B)eq_nodes518,11798
+void test_serial_deserial ()test_serial_deserial547,12648
+void test_hex_diff ()test_hex_diff572,13204
+test_nodes ()test_nodes596,13704
+void test_arc_rel ()test_arc_rel618,14220
+void test_cmp ()test_cmp652,14958
+main ()main678,15477
+
+client.cpp,1391
+Client::user_menu ()user_menu10,155
+Client::command_map_t Client::command_set[] = command_set28,599
+Client::handle_error (int errsv) handle_error45,1163
+Client::parse (string input)parse58,1532
+Client::port_func (stringstream &input)port_func78,1982
+Client::ip_func (stringstream &input)ip_func88,2181
+Client::creat_func (stringstream &input)creat_func100,2457
+Client::join_func(stringstream &input)join_func120,2940
+Client::put_func (stringstream &input)put_func142,3555
+Client::get_func (stringstream &input)get_func160,4003
+Client::lset_func (stringstream &input)lset_func176,4325
+Client::rt_table_func (stringstream &input)rt_table_func195,4861
+Client::nset_func (stringstream &input)nset_func214,5388
+Client::shutdown_func (stringstream &input)shutdown_func232,5856
+Client::help_func (stringstream &input)help_func239,5939
+Client::write_to_pipe (int fd, const char * buff, int len)write_to_pipe255,6353
+Client::handle_pipe_req ()handle_pipe_req271,6715
+Client::get_pipe_req (string s, string &val)get_pipe_req494,13350
+Client::put_pipe_req (string s, string val, rt_tblent_t &res)put_pipe_req537,14479
+Client::add_pipe_req (ip_t ip, port_t port, rt_tblent_t &res)add_pipe_req588,16060
+Client::write_to_socket (int fd, const char * buff, int len)write_to_socket649,17793
+Client::read_from_socket (int fd, char * buff)read_from_socket661,18022
+
+leafset.h,51
+#define LEAFSET_H_INCLUDEDLEAFSET_H_INCLUDED2,27
+
+Makefile,0
+
+client.h,879
+#define CLIENT_H_INCLUDEDCLIENT_H_INCLUDED2,26
+#define COMMAND_SET_SIZE COMMAND_SET_SIZE7,93
+#define CLIERR_STATUS CLIERR_STATUS8,121
+#define CLIERR_CMDNTFND CLIERR_CMDNTFND9,148
+#define CLIERR_WTOPIPE CLIERR_WTOPIPE10,177
+#define MAXBUFF MAXBUFF12,206
+#define MAXLINE MAXLINE13,237
+#define LISTEN_QUEUE LISTEN_QUEUE14,268
+#define CLIERR_CONN CLIERR_CONN16,300
+#define CLIERR_SELECT CLIERR_SELECT17,331
+#define CLIERR_SUCCESS CLIERR_SUCCESS18,362
+#define CLIERR_FAILURE CLIERR_FAILURE19,393
+#define CLIERR_WTOSOCK CLIERR_WTOSOCK20,424
+#define CLIERR_RFROMSOCK CLIERR_RFROMSOCK21,455
+class ClientClient25,510
+	typedef void (Client::*command_func)(std::stringstream &);command_func29,536
+	typedef const std::pair<std::string, command_func > command_map_t;command_map_t30,596
+	static command_map_t command_set[COMMAND_SET_SIZE];command_set31,664
+
+semaphore.h,169
+#define SEMA_H_INCLUDEDSEMA_H_INCLUDED2,24
+class SemaSema10,141
+	mutex mt;mt20,268
+	condition_variable cv;cv21,279
+	int ct;     	/* Semaphore count */ct22,303
